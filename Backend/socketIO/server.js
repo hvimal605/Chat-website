@@ -6,7 +6,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://harshspark-chat-web.netlify.app",
+        origin: [
+            "https://harshspark-chat-web.netlify.app", 
+            "http://localhost:5173"                    
+        ],
         methods: ["GET", "POST"],
     },
 });
@@ -29,18 +32,15 @@ io.on("connection", (socket) => {
 
     io.emit('getOnlineUsers', Object.keys(users));
 
-
     socket.on('typing', (data) => {
         const { senderId, receiverId, isTyping } = data;
         const receiverSocketId = getRececiverSocketId(receiverId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit('typing', { senderId, isTyping });
-
         }
-       
-    // console.log("typing" , senderId  ,"to",receiverId , isTyping)
     });
 
+    // Uncomment and modify this section as needed
     // socket.on("sendImage", (data) => {
     //     const { receiverId, image, senderId } = data;
     //     const receiverSocketId = getRececiverSocketId(receiverId);
@@ -49,8 +49,6 @@ io.on("connection", (socket) => {
     //     }
     //     console.log("sender" , senderId  ,"to",receiverId , image)
     // });
-
-    
 
     socket.on("disconnect", () => {
         console.log("A user disconnected", socket.id);

@@ -24,9 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));  
 
 app.use(cors({
-  origin: "https://harshspark-chat-web.netlify.app",
+  origin: [
+    "https://harshspark-chat-web.netlify.app",  
+    "http://localhost:5173"                      
+  ],
   credentials: true
 }));
+
 require("dotenv").config()
 const port = process.env.PORT||4000
 
